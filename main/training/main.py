@@ -47,9 +47,9 @@ def main():
             
             total_count += 1
             img_path = os.path.join(root, filename)
-            
+
             success = processor.process_single_image(
-                img_path, filename, OUTPUT_DIR, MAX_WIDTH, MAX_HEIGHT, INPUT_DIR
+                img_path, filename, OUTPUT_DIR, MAX_WIDTH, MAX_HEIGHT
             )
             
             if success:

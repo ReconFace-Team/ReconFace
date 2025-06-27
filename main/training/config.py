@@ -1,8 +1,8 @@
 # === CONFIGURATION SETTINGS ===
 
 # Directory paths
-INPUT_DIR = "images"
-OUTPUT_DIR = "embeddings"
+INPUT_DIR = "./src/images"
+OUTPUT_DIR = "./src/embeddings"
 
 # Augmentation settings
 N_AUGMENTATIONS = 100
