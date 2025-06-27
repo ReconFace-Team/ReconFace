@@ -175,6 +175,14 @@ class FaceProcessor:
         rel_dir = os.path.relpath(root, os.path.dirname(img_path.replace(filename, '')))
         person_name = rel_dir.split(os.sep)[0] if rel_dir != '.' else base_name
         
+        person_dir = os.path.join(output_dir, person_name)
+        
+        # Check if the person's folder already exists in the embeddings directory
+        if os.path.exists(person_dir):
+            print(f"✅ Embeddings folder already exists for {person_name}, skipping")
+            return False
+        
+        # Create output directory for the person
         person_dir = create_output_directory(person_name, output_dir)
         
         # Save original embedding
