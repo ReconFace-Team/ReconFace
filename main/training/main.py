@@ -49,7 +49,7 @@ def main():
             img_path = os.path.join(root, filename)
             
             success = processor.process_single_image(
-                img_path, filename, OUTPUT_DIR, MAX_WIDTH, MAX_HEIGHT
+                img_path, filename, OUTPUT_DIR, MAX_WIDTH, MAX_HEIGHT, INPUT_DIR
             )
             
             if success:

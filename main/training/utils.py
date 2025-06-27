@@ -56,28 +56,34 @@ def count_existing_embeddings(person_dir):
     embedding_files = [f for f in os.listdir(person_dir) if f.endswith('.npy')]
     return len(embedding_files)
 
-def get_existing_image_embeddings(person_dir, base_name):
+def get_existing_image_embeddings(person_dir, person_name, base_name):
     """Get list of existing embeddings for a specific image"""
     if not os.path.exists(person_dir):
         return []
     
     existing_embeddings = []
+    # Look for embeddings that match the exact naming pattern
+    original_pattern = f"{person_name}_{base_name}_original.npy"
+    aug_pattern_prefix = f"{person_name}_{base_name}_aug_"
+    
     for filename in os.listdir(person_dir):
-        if filename.endswith('.npy') and base_name in filename:
-            existing_embeddings.append(filename)
+        if filename.endswith('.npy'):
+            if filename == original_pattern or filename.startswith(aug_pattern_prefix):
+                existing_embeddings.append(filename)
     
     return existing_embeddings
 
 def check_if_image_processed(person_dir, person_name, base_name, n_augmentations):
     """Check if an image has already been fully processed"""
-    existing = get_existing_image_embeddings(person_dir, base_name)
+    existing = get_existing_image_embeddings(person_dir, person_name, base_name)
     
     # Check for original embedding
     original_name = f"{person_name}_{base_name}_original.npy"
     has_original = original_name in existing
     
     # Count augmentation embeddings
-    aug_count = len([f for f in existing if '_aug_' in f])
+    aug_pattern_prefix = f"{person_name}_{base_name}_aug_"
+    aug_count = len([f for f in existing if f.startswith(aug_pattern_prefix)])
     
     return has_original, aug_count
 
