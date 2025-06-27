@@ -24,7 +24,7 @@ class CameraManager:
             self.cap.set(cv2.CAP_PROP_BUFFERSIZE, CAMERA_BUFFER_SIZE)  # Reducir latencia
         else:
             logger.info("Usando cámara local")
-            self.cap = cv2.VideoCapture(1)
+            self.cap = cv2.VideoCapture(0)
         
         if not self.cap.isOpened():
             logger.error("No se pudo abrir la fuente de video")

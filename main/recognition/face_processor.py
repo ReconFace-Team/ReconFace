@@ -86,31 +86,41 @@ class FaceProcessor:
             confidence = result['confidence']
             det_score = result['det_score']
             face_size = result.get('face_size', 0)
-            
-            # Color basado en confianza y distancia
-            color = get_color_by_confidence(identity, confidence, face_size)
-            
-            # Grosor de línea basado en confianza
-            thickness = 3 if confidence > 80 else 2
-            cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
-            
-            # Etiqueta con información detallada incluyendo distancia estimada
+
+            # Determinar color basado en identidad y confianza
             if identity != "Desconocido":
                 distance_est = get_distance_estimation(face_size)
+
+                # Lógica de color según confianza y tamaño del rostro
+                if confidence > 85 and face_size > 80:
+                    color = (0, 255, 0)  # Verde fuerte - alta confianza, cerca
+                elif confidence > 70:
+                    color = (0, 255, 255)  # Amarillo
+                elif confidence > 50:
+                    color = (0, 165, 255)  # Naranja
+                else:
+                    color = (0, 0, 255)  # Rojo
+
                 label = f"{identity} ({confidence:.1f}%) - {distance_est}"
             else:
+                color = (255, 0, 0)  # Azul para desconocidos
                 label = f"Desconocido (det: {det_score:.2f}) - Size: {face_size}px"
-            
-            # Fondo para el texto
+
+            # Grosor de línea basado en confianza
+            thickness = 3 if confidence > 80 else 2
+
+            # Dibujar rectángulo
+            cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
+
+            # Fondo para la etiqueta
             label_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE, FONT_THICKNESS)[0]
-            cv2.rectangle(frame, (x1, y1-25), (x1 + label_size[0], y1), color, -1)
-            cv2.putText(frame, label, (x1, y1-8), cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE, (255, 255, 255), FONT_THICKNESS)
-        
-        # Mostrar estadísticas
+            cv2.rectangle(frame, (x1, y1 - 25), (x1 + label_size[0], y1), color, -1)
+            cv2.putText(frame, label, (x1, y1 - 8), cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE, (255, 255, 255), FONT_THICKNESS)
+
+        # Mostrar estadísticas generales
         stats_text = f"Frames: {self.recognizer.stats['processed_frames']}/{self.recognizer.stats['total_frames']} | "
         stats_text += f"Caras: {self.recognizer.stats['faces_detected']} | "
         stats_text += f"Reconocidas: {self.recognizer.stats['faces_recognized']}"
-        
         cv2.putText(frame, stats_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE, (255, 255, 255), 1)
-        
+
         return frame

@@ -3,7 +3,7 @@ Configuration settings for the face recognition system
 """
 
 # === EMBEDDING CONFIGURATION ===
-EMBEDDING_DIR = "embeddings"
+EMBEDDING_DIR = "./src/embeddings"
 THRESHOLD = 0.50  # Más estricto para mayor precisión con 1000 embeddings
 MIN_CONFIDENCE = 0.85  # Aumentado para mejor calidad
 TEMPORAL_WINDOW = 7  # Mayor ventana temporal para más estabilidad
@@ -11,7 +11,7 @@ MIN_FACE_SIZE = 30  # Reducido para larga distancia
 QUALITY_THRESHOLD = 0.7  # Calidad mínima de embedding
 
 # === PERFORMANCE OPTIMIZATION ===
-PROCESS_EVERY_N_FRAMES = 2  # Procesar cada 2 frames
+PROCESS_EVERY_N_FRAMES = 1  # Procesar cada 2 frames
 FRAME_RESIZE_FACTOR = 1.0  # Sin redimensionar para preservar resolución
 BATCH_SIZE = 4  # Procesar múltiples caras en lote
 
