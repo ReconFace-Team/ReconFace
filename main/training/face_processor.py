@@ -163,35 +163,36 @@ class FaceProcessor:
         img, size, was_resized = resize_image_if_needed(img, max_width, max_height)
         if was_resized:
             print(f"🔄 Image resized: {filename} → {size}")
-        
+
         # Test detection on original image
         original_faces = self.detect_faces_in_original(img, filename)
         if not original_faces:
             return False  # Skip if no faces in original
-        
+
         # Setup paths and directories
         base_name = os.path.splitext(filename)[0]
         root = os.path.dirname(img_path)
-        rel_dir = os.path.relpath(root, os.path.dirname(img_path.replace(filename, '')))
-        person_name = rel_dir.split(os.sep)[0] if rel_dir != '.' else base_name
-        
-        person_dir = os.path.join(output_dir, person_name)
-        
-        # Check if the person's folder already exists in the embeddings directory
-        if os.path.exists(person_dir):
-            print(f"✅ Embeddings folder already exists for {person_name}, skipping")
+        rel_dir = os.path.relpath(root, INPUT_DIR)  # Relative path from INPUT_DIR
+        person_name = rel_dir.split(os.sep)[0]  # Extract the top-level folder name
+
+        print(f"{base_name} {root} {rel_dir} {person_name}")
+
+        # Check if a folder with the same name as person_name exists in the embeddings directory
+        person_dir = os.path.join(OUTPUT_DIR, person_name)
+        if os.path.isdir(person_dir):
+            print(f"✅ Embeddings folder already exists for '{person_name}', skipping")
             return False
-        
+
         # Create output directory for the person
-        person_dir = create_output_directory(person_name, output_dir)
-        
+        person_dir = create_output_directory(person_name, OUTPUT_DIR)
+
         # Save original embedding
         self.save_original_embedding(original_faces, person_name, base_name, person_dir)
-        
+
         # Process augmentations
         successful_augmentations = self.process_augmentations(
             img, filename, person_name, base_name, person_dir
         )
-        
+
         print(f"📊 Summary for {filename}: {successful_augmentations}/{N_AUGMENTATIONS} successful embeddings")
         return True
