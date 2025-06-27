@@ -21,8 +21,8 @@ DISTANCE_ADAPTIVE_THRESHOLD = True  # Threshold dinámico por tamaño
 ENHANCED_PREPROCESSING = True  # Preprocesamiento avanzado
 
 # === CAMERA CONFIGURATION ===
-USE_RTSP = 0
-RTSP_URL = "rtsp://usuario:contraseña@ip:puerto/stream"
+USE_RTSP = 0 # 0 Para camara local, 1 para servidor RTSP
+RTSP_URL = "rtsp://192.168.18.225:8554/webcam"
 
 # === CAMERA SETTINGS ===
 CAMERA_WIDTH = 1280
@@ -32,7 +32,7 @@ CAMERA_BUFFER_SIZE = 1
 
 # === FACE ANALYSIS SETTINGS ===
 DETECTION_SIZE = (640, 640)  # Tamaño optimizado para detección
-CTX_ID = -1  # -1 para CPU, 0+ para GPU
+CTX_ID = 0  # -1 para CPU, 0+ para GPU
 
 # === TEMPORAL SMOOTHING ===
 MIN_TEMPORAL_CONSISTENCY = 3  # Mínimo de detecciones consistentes

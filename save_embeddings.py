@@ -76,7 +76,7 @@ def show_preview(img, faces, window_name="Preview", duration=2000):
 # === INICIALIZAR MODELO DE DETECCIÓN DE ROSTROS ===
 print("🔄 Inicializando modelo de detección facial...")
 app = FaceAnalysis(name='buffalo_l')
-app.prepare(ctx_id=-1)  # Usa 0 si tienes GPU disponible
+app.prepare(ctx_id=0)  # Usa 0 si tienes GPU disponible
 print("✅ Modelo inicializado")
 
 # === RECORRER TODAS LAS IMÁGENES EN SUBCARPETAS ===
