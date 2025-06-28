@@ -1,0 +1,29 @@
+{
+    "personas": {
+        "jhoan aedo": {
+            "id": "e137cf62-1a56-4533-8826-86997f448df9",
+            "nombre": "jhoan aedo",
+            "ruta_embeddings": "./src/embeddings\\jhoan aedo",
+            "total_embeddings": 809,
+            "fecha_registro": "N/A"
+        },
+        "ariel del rio": {
+            "id": "f9ec0cf9-5392-4ad0-b7fa-79b38062df28",
+            "nombre": "ariel del rio",
+            "ruta_embeddings": "./src/embeddings\\ariel del rio",
+            "total_embeddings": 933,
+            "fecha_registro": "N/A"
+        },
+        "benjamin valdivia": {
+            "id": "57f69bbc-2050-4fc9-9ccb-2448a90c0945",
+            "nombre": "benjamin valdivia",
+            "ruta_embeddings": "./src/embeddings\\benjamin valdivia",
+            "total_embeddings": 913,
+            "fecha_registro": "N/A"
+        }
+    },
+    "estadisticas": {
+        "total_personas": 3,
+        "total_embeddings": 2655
+    }
+}

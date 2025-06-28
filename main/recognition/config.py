@@ -11,7 +11,7 @@ MIN_FACE_SIZE = 30  # Reducido para larga distancia
 QUALITY_THRESHOLD = 0.7  # Calidad mínima de embedding
 
 # === PERFORMANCE OPTIMIZATION ===
-PROCESS_EVERY_N_FRAMES = 1  # Procesar cada 2 frames
+PROCESS_EVERY_N_FRAMES = 1  # Procesar cada frame
 FRAME_RESIZE_FACTOR = 1.0  # Sin redimensionar para preservar resolución
 BATCH_SIZE = 4  # Procesar múltiples caras en lote
 
@@ -21,13 +21,13 @@ DISTANCE_ADAPTIVE_THRESHOLD = True  # Threshold dinámico por tamaño
 ENHANCED_PREPROCESSING = True  # Preprocesamiento avanzado
 
 # === CAMERA CONFIGURATION ===
-USE_RTSP = 0 # 0 Para camara local, 1 para servidor RTSP
-RTSP_URL = "rtsp://192.168.18.225:8554/webcam"
+USE_RTSP = 1 # 0 Para camara local, 1 para servidor RTSP
+RTSP_URL = "rtsp://100.91.199.92:8554/webcam"
 
 # === CAMERA SETTINGS ===
-CAMERA_WIDTH = 1280
-CAMERA_HEIGHT = 720
-CAMERA_FPS = 30
+CAMERA_WIDTH = 1920
+CAMERA_HEIGHT = 1080
+CAMERA_FPS = 120
 CAMERA_BUFFER_SIZE = 1
 
 # === FACE ANALYSIS SETTINGS ===
