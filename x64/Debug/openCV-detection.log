@@ -1,0 +1,3 @@
+﻿  Test.cpp
+C:\Users\adelr\source\repos\openCV-detection\openCV-detection\Test.cpp(10,6): warning C4326: el tipo de valor devuelto de 'main' debe ser 'int' en lugar de 'void'
+  openCV-detection.vcxproj -> C:\Users\adelr\source\repos\openCV-detection\x64\Debug\openCV-detection.exe
