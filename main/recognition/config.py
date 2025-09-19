@@ -20,10 +20,6 @@ ENABLE_SUPER_RESOLUTION = True  # Mejorar resolución de caras pequeñas
 DISTANCE_ADAPTIVE_THRESHOLD = True  # Threshold dinámico por tamaño
 ENHANCED_PREPROCESSING = True  # Preprocesamiento avanzado
 
-# === CAMERA CONFIGURATION ===
-USE_RTSP = 1 # 0 Para camara local, 1 para servidor RTSP
-RTSP_URL = "rtsp://100.91.199.92:8554/webcam"
-
 # === CAMERA SETTINGS ===
 CAMERA_WIDTH = 1920
 CAMERA_HEIGHT = 1080

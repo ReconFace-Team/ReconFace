@@ -11,47 +11,51 @@ logger = logging.getLogger(__name__)
 
 
 class CameraManager:
-    """Manages camera initialization and configuration"""
-    
+    """Manages multiple camera initialization and configuration"""
+
     def __init__(self):
-        self.cap = None
-    
-    def initialize_camera(self):
-        """Initialize camera based on configuration"""
-        if USE_RTSP:
-            logger.info("Usando cámara RTSP")
-            self.cap = cv2.VideoCapture(RTSP_URL)
-            self.cap.set(cv2.CAP_PROP_BUFFERSIZE, CAMERA_BUFFER_SIZE)  # Reducir latencia
-        else:
-            logger.info("Usando cámara local")
-            self.cap = cv2.VideoCapture(0)
-        
-        if not self.cap.isOpened():
-            logger.error("No se pudo abrir la fuente de video")
-            return False
-        
-        # Configurar cámara
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        self.cap.set(cv2.CAP_PROP_FPS, CAMERA_FPS)
-        
-        logger.info(f"Cámara inicializada: {CAMERA_WIDTH}x{CAMERA_HEIGHT} @ {CAMERA_FPS} FPS")
-        return True
-    
-    def read_frame(self):
-        """Read a frame from the camera"""
-        if self.cap is None:
-            return False, None
-        
-        return self.cap.read()
-    
-    def release(self):
-        """Release camera resources"""
-        if self.cap is not None:
-            self.cap.release()
-            self.cap = None
-            logger.info("Cámara liberada")
+        self.cams = []  # List of cv2.VideoCapture objects
+        self.indexes = []  # List of detected camera indexes
+
+    def detect_cameras(self, max_tested=10):
+        indexes = []
+        for i in range(max_tested):
+            cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
+            if cap.isOpened():
+                logger.info(f"Camera detected at index {i}")
+                indexes.append(i)
+            cap.release()
+        logger.info(f"Total cameras detected: {len(indexes)}")
+        return indexes
+
+
+    def read_frames(self):
+        """
+        Read frames from all initialized cameras.
+        Returns a list of (success, frame) tuples.
+        """
+        frames = []
+        for cap in self.cams:
+            if cap.isOpened():
+                ret, frame = cap.read()
+                frames.append((ret, frame))
+            else:
+                frames.append((False, None))
+        return frames
+
+    def release_all(self):
+        """Release all camera resources"""
+        for cap in self.cams:
+            if cap is not None:
+                cap.release()
+        self.cams = []
+        self.indexes = []
+        logger.info("All cameras released")
+
+    def get_camera_count(self):
+        """Return the number of active cameras"""
+        return len(self.cams)
     
     def is_opened(self):
-        """Check if camera is opened"""
-        return self.cap is not None and self.cap.isOpened()
+        """Check if at least one camera is opened"""
+        return any(cap.isOpened() for cap in self.cams)
