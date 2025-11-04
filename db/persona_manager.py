@@ -4,6 +4,7 @@ import uuid
 import numpy as np
 import glob
 import shutil
+import pandas as pd
 from config import BASE_EMBEDDINGS_PATH, crear_estructura_directorios
 from database_manager import cargar_database, guardar_database
 from embeddings_handler import obtener_embeddings_persona
