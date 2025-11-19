@@ -7,8 +7,8 @@ import numpy as np
 import logging
 from collections import deque
 
-from config import *
-from image_processor import *
+from .config import *
+from .image_processor import *
 
 logger = logging.getLogger(__name__)
 

@@ -13,7 +13,7 @@ import numpy as np
 from dataclasses import dataclass
 from typing import Optional, Tuple, List, Dict
 
-import config as cfg
+from . import config as cfg
 
 # --- importar transformations con tolerancia ---
 try:

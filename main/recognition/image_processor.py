@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import logging
 
-from config import *
+from .config import *
 
 logger = logging.getLogger(__name__)
 

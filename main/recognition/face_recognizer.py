@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from collections import defaultdict, deque
 from openvino.runtime import Core
 
-from config import *
+from .config import *
 logger = logging.getLogger(__name__)
 
 # Plantilla de 5 puntos para alineación ArcFace 112x112

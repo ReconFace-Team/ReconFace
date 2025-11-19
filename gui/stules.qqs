@@ -1,0 +1,12 @@
+QMainWindow { background: #101315; color: #eaecef; }
+QLabel { color: #eaecef; }
+QPushButton {
+  background: #1e2327; color: #eaecef; border: 1px solid #2b3137;
+  padding: 6px 10px; border-radius: 6px;
+}
+QPushButton:hover { background: #2b3137; }
+QTabWidget::pane { border: 1px solid #2b3137; }
+QTabBar::tab { background: #1b1f23; color: #eaecef; padding: 8px; }
+QTabBar::tab:selected { background: #2b3137; }
+QTableWidget { background: #0f1113; gridline-color: #2b3137; }
+QHeaderView::section { background: #1b1f23; color: #eaecef; padding: 6px; }
