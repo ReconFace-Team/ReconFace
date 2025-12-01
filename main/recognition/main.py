@@ -1,87 +1,53 @@
 """
-Threaded multi-camera face recognition system (config-driven)
+Main application for the face recognition system (with AutoLearn)
 """
 
 import cv2
 import time
 import logging
-import numpy as np
-import threading
 
-from config import *
+import config as cfg  
 from face_recognizer import OptimizedFaceRecognizer
 from face_processor import FaceProcessor
 from camera_manager import CameraManager
-from utils import setup_logging, FPSCounter, PerformanceMonitor, print_statistics, validate_directories
+from main.recognition.utils import setup_logging, FPSCounter, PerformanceMonitor, print_statistics, validate_directories
 
+# === AutoLearn (robusto) ===
+try:
+    import importlib
+    m = importlib.import_module("autolearn")
+    _AutoLearner = getattr(m, "AutoLearner", None)
+    _HAS_AUTOLEARN = callable(_AutoLearner)
+    if not _HAS_AUTOLEARN:
+        print(f"[AutoLearn] Cargado desde: {getattr(m, '__file__', 'desconocido')}")
+        print(f"[AutoLearn] AutoLearner = {type(_AutoLearner)} (esperado: class/callable)")
+except Exception:
+    _AutoLearner = None
+    _HAS_AUTOLEARN = False
+
+# Setup logging
 logger = setup_logging()
 
 
-# ==============================
-# Threaded camera capture class
-# ==============================
-class CameraStream:
-    def __init__(self, index, width=CAMERA_WIDTH, height=CAMERA_HEIGHT, fps=CAMERA_FPS):
-        self.cap = cv2.VideoCapture(index, cv2.CAP_DSHOW)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-        self.cap.set(cv2.CAP_PROP_FPS, fps)
-        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, CAMERA_BUFFER_SIZE)
-
-        self.frame = np.zeros((height, width, 3), dtype=np.uint8)
-        self.running = True
-        self.lock = threading.Lock()
-        self.fps = 0.0
-        self.prev_time = time.time()
-
-        self.thread = threading.Thread(target=self.update, daemon=True)
-        self.thread.start()
-
-    def update(self):
-        while self.running:
-            ret, frame = self.cap.read()
-            if ret and frame is not None:
-                with self.lock:
-                    self.frame = frame
-                now = time.time()
-                dt = now - self.prev_time
-                if dt > 0:
-                    self.fps = 0.9 * self.fps + 0.1 * (1.0 / dt)
-                self.prev_time = now
-
-    def read(self):
-        with self.lock:
-            return self.frame.copy(), self.fps
-
-    def stop(self):
-        self.running = False
-        self.thread.join()
-        self.cap.release()
+def draw_autolearn_status(frame, enabled: bool, queue_len: int, x=10, y=55):
+    """Pequeño overlay con el estado del AutoLearn."""
+    status = "ON" if enabled else "OFF"
+    text = f"AutoLearn: {status} | Q:{queue_len}"
+    cv2.putText(
+        frame, text, (x, y),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        getattr(cfg, "FONT_SCALE", 0.5),
+        (255, 255, 255), 1
+    )
 
 
-# ==============================
-# Grid creation function
-# ==============================
-def create_grid(frames, cols, rows, cell_w, cell_h, fps_list):
-    grid = np.zeros((rows * cell_h, cols * cell_w, 3), dtype=np.uint8)
-    for idx, frame in enumerate(frames):
-        r = idx // cols
-        c = idx % cols
-        resized = cv2.resize(frame, (cell_w, cell_h))
-        cv2.putText(resized, f"FPS: {fps_list[idx]:.1f}", (10, 30),
-                    FONT_TYPE, FONT_SCALE, (0, 255, 0), FONT_THICKNESS)
-        grid[r*cell_h:(r+1)*cell_h, c*cell_w:(c+1)*cell_w] = resized
-    return grid
-
-
-# ==============================
-# Main application
-# ==============================
 def main():
-    """Threaded multi-camera face recognition"""
+    """Main application function"""
+    # Validate environment
     if not validate_directories():
         return
 
+    # Initialize components
     logger.info("Inicializando sistema de reconocimiento facial...")
 
     recognizer = OptimizedFaceRecognizer()
@@ -90,63 +56,110 @@ def main():
         return
 
     face_processor = FaceProcessor(recognizer)
+    camera_manager = CameraManager()
     fps_counter = FPSCounter()
     performance_monitor = PerformanceMonitor()
 
-    # Detect connected cameras
-    camera_manager = CameraManager()
-    cam_indexes = camera_manager.detect_cameras(max_tested=10)
-    if len(cam_indexes) == 0:
-        logger.error("No se detectaron cámaras")
+    # === AutoLearn init ===
+    autolearn = None
+    auto_enabled = getattr(cfg, "AUTOLEARN_ENABLED", False)
+    if _HAS_AUTOLEARN and auto_enabled:
+        try:
+            autolearn = _AutoLearner()  # usar el símbolo verificado
+            autolearn.enabled = True
+            logger.info("AutoLearn habilitado")
+        except Exception as e:
+            logger.error(f"No se pudo inicializar AutoLearn: {e}")
+            autolearn = None
+    else:
+        logger.info("AutoLearn deshabilitado (o no disponible)")
+
+    # Initialize camera
+    if not camera_manager.initialize_camera():
         return
-    logger.info(f"{len(cam_indexes)} cámaras detectadas: {cam_indexes}")
 
-    # Start threaded camera streams
-    cams = [CameraStream(idx, CAMERA_WIDTH, CAMERA_HEIGHT, CAMERA_FPS) for idx in cam_indexes]
-
-    # Compute grid layout
-    num_cams = len(cams)
-    cols = int(np.ceil(np.sqrt(num_cams)))
-    rows = int(np.ceil(num_cams / cols))
-    screen_w, screen_h = 1280, 720
-    cell_w, cell_h = screen_w // cols, screen_h // rows
+    logger.info("Sistema inicializado correctamente")
+    logger.info("Controles:")
+    logger.info("  'q' - Salir")
+    logger.info("  's' - Mostrar estadísticas")
+    logger.info("  'r' - Reset estadísticas")
+    logger.info("  'a' - Toggle AutoLearn ON/OFF")
+    logger.info("  'p' - Forzar procesamiento de cuarentena (AutoLearn)")
 
     frame_count = 0
 
-    logger.info("Sistema inicializado correctamente")
-    logger.info("Controles: 'q' - salir | 's' - estadísticas | 'r' - reset estadísticas")
-
     try:
         while True:
-            frames, fps_list = [], []
+            performance_monitor.start_timing()
 
-            for cam in cams:
-                frame, fps = cam.read()
-                frames.append(frame)
-                fps_list.append(fps)
+            ret, frame = camera_manager.read_frame()
+            if not ret:
+                logger.warning("No se pudo leer el frame")
+                break
 
-                # Process every N frames
-                frame_count += 5
-                # Process frame with processing options
-                if frame_count % PROCESS_EVERY_N_FRAMES == 0:
-                    recognizer.stats['processed_frames'] += 1
-                    results = face_processor.process_frame(frame)  # pass options here if supported
-                    frame = face_processor.draw_results(frame, results)  # just draws results
+            recognizer.stats['total_frames'] += 1
+            frame_count += 1
 
+            # Process frame based on configuration
+            if frame_count % getattr(cfg, "PROCESS_EVERY_N_FRAMES", 1) == 0:
+                recognizer.stats['processed_frames'] += 1
+                results = face_processor.process_frame(frame)
+                frame = face_processor.draw_results(frame, results)
 
-                recognizer.stats['total_frames'] += 1
+                # === AutoLearn: encolar candidatos de alta confianza ===
+                if autolearn and autolearn.enabled:
+                    min_conf = float(getattr(cfg, "AUTOLEARN_QUARANTINE_MIN_CONF_PCT", 95.0))
+                    for res in results:
+                        identity = res.get('identity', 'Desconocido')
+                        if identity == "Desconocido":
+                            continue
+                        confidence = float(res.get('confidence', 0.0))  # 0..100
+                        if confidence >= min_conf:
+                            bbox = res.get('bbox', None)
+                            if bbox is not None:
+                                autolearn.maybe_queue(frame, identity, bbox, confidence_pct=confidence)
 
-            # Display grid
-            grid = create_grid(frames, cols, rows, cell_w, cell_h, fps_list)
-            cv2.imshow("Sistema de Reconocimiento Facial", grid)
+                    # Tick periódico (cada N frames definidos en config)
+                    try:
+                        autolearn.maybe_process_periodically(
+                            frame_count,
+                            every_n=getattr(cfg, "AUTOLEARN_PROCESS_EVERY_N_FRAMES", 30)
+                        )
+                    except Exception as e:
+                        logger.error(f"AutoLearn periodic error: {e}")
 
+            # Update performance metrics
+            process_time = performance_monitor.end_timing()
+            fps_counter.update(process_time)
+
+            # Display FPS + AutoLearn overlay
+            current_fps = fps_counter.get_fps()
+            cv2.putText(
+                frame, f"FPS: {current_fps:.1f}",
+                (10, frame.shape[0] - 20),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                getattr(cfg, "FONT_SCALE", 0.5),
+                (255, 255, 255), 1
+            )
+
+            if autolearn:
+                try:
+                    qlen = autolearn.queue_len()
+                except Exception:
+                    qlen = 0
+                draw_autolearn_status(frame, autolearn.enabled, qlen)
+
+            # Show frame
+            cv2.imshow("Sistema de Reconocimiento Facial", frame)
+
+            # Handle keyboard input
             key = cv2.waitKey(1) & 0xFF
-            if key == ord('q') or key == ord('Q'):
+            if key == ord('q'):
                 logger.info("Saliendo del sistema...")
                 break
-            elif key == ord('s') or key == ord('S'):
+            elif key == ord('s'):
                 print_statistics(recognizer.stats, fps_counter)
-            elif key == ord('r') or key == ord('R'):
+            elif key == ord('r'):
                 logger.info("Reseteando estadísticas...")
                 recognizer.stats = {
                     'total_frames': 0,
@@ -156,6 +169,21 @@ def main():
                 }
                 performance_monitor.reset()
                 frame_count = 0
+            elif key == ord('a'):
+                if autolearn:
+                    autolearn.enabled = not autolearn.enabled
+                    logger.info(f"AutoLearn {'habilitado' if autolearn.enabled else 'deshabilitado'}")
+                else:
+                    logger.info("AutoLearn no disponible")
+            elif key == ord('p'):
+                if autolearn:
+                    try:
+                        n_promoted, n_skipped = autolearn.force_process_now()
+                        logger.info(f"AutoLearn: procesado inmediato. Promovidos={n_promoted}, Omitidos={n_skipped}")
+                    except Exception as e:
+                        logger.error(f"AutoLearn force_process_now error: {e}")
+                else:
+                    logger.info("AutoLearn no disponible")
 
     except KeyboardInterrupt:
         logger.info("Interrumpido por el usuario")
@@ -164,9 +192,8 @@ def main():
         import traceback
         traceback.print_exc()
     finally:
-        # Stop all cameras
-        for cam in cams:
-            cam.stop()
+        # Cleanup
+        camera_manager.release()
         cv2.destroyAllWindows()
         logger.info("Sistema cerrado correctamente")
 

@@ -7,8 +7,8 @@ import numpy as np
 import logging
 from collections import deque
 
-from config import *
-from image_processor import *
+from .config import *
+from .image_processor import *
 
 logger = logging.getLogger(__name__)
 
@@ -20,63 +20,51 @@ class FaceProcessor:
         self.recognizer = recognizer
     
     def process_frame(self, frame):
-        """Procesamiento principal del frame con optimizaciones para larga distancia"""
-        processed_frame = preprocess_frame(frame)
-        
+        """Procesamiento principal del frame con OpenVINO + optimizaciones larga distancia"""
+        processed_frame = preprocess_frame(frame)  # respeta EXPECTED_COLOR_ORDER
+
         try:
-            faces = self.recognizer.app.get(processed_frame)
+            ov_faces = self.recognizer.get_faces(processed_frame)  # lista de DetectedFace
             results = []
-            
-            for i, face in enumerate(faces):
-                # Filtrar por confianza
-                if face.det_score < MIN_CONFIDENCE:
-                    continue
-                
-                x1, y1, x2, y2 = [int(v) for v in face.bbox]
-                face_width = x2 - x1
+
+            for f in ov_faces:
+                x1, y1, x2, y2 = f.bbox
+                face_width  = x2 - x1
                 face_height = y2 - y1
-                face_size = min(face_width, face_height)
-                
+                face_size   = min(face_width, face_height)
                 if face_size < MIN_FACE_SIZE:
                     continue
-                
-                # Mejorar región facial para caras pequeñas
-                if face_size < BASE_FACE_SIZE:
-                    processed_frame = enhance_face_region(processed_frame, (x1, y1, x2, y2))
-                    # Redetectar con imagen mejorada
-                    enhanced_faces = self.recognizer.app.get(processed_frame[y1:y2, x1:x2])
-                    if enhanced_faces:
-                        face = enhanced_faces[0]  # Usar cara mejorada
-                
-                # Identificar cara con threshold adaptativo
+
+                # Threshold adaptativo + identificación
                 adaptive_threshold = self.recognizer.get_adaptive_threshold(face_size)
-                identity, confidence = self.recognizer.identify_face_optimized(face.embedding, adaptive_threshold)
-                
-                # Aplicar suavizado temporal
+                identity, confidence = self.recognizer.identify_face_optimized(f.embedding, adaptive_threshold)
+
+                # Suavizado temporal
                 face_id = f"{x1}_{y1}_{x2}_{y2}"
                 identity, confidence = self.recognizer.apply_temporal_smoothing(face_id, identity, confidence)
-                
-                # Penalizar confianza para caras muy pequeñas
+
+                # Penalización por distancia
                 confidence = apply_confidence_penalty(confidence, face_size)
-                
+
                 results.append({
                     'bbox': (x1, y1, x2, y2),
                     'identity': identity,
                     'confidence': confidence,
-                    'det_score': face.det_score,
+                    'det_score': f.det_score,
                     'face_size': face_size
                 })
-                
-                # Actualizar estadísticas
+
+                # Stats
                 self.recognizer.stats['faces_detected'] += 1
                 if identity != "Desconocido":
                     self.recognizer.stats['faces_recognized'] += 1
-            
+
             return results
-            
+
         except Exception as e:
             logger.error(f"Error procesando frame: {e}")
             return []
+
     
     def draw_results(self, frame, results):
         """Dibuja resultados en el frame con información de distancia"""

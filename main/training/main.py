@@ -1,7 +1,7 @@
 import os
 from face_processor import FaceProcessor
-from utils import is_image_file, print_final_tips, count_existing_embeddings
-from config import INPUT_DIR, OUTPUT_DIR, MAX_WIDTH, MAX_HEIGHT, MIN_DET_SCORE, CHECK_EXISTING_EMBEDDINGS
+from main.training.utils import is_image_file, print_final_tips, count_existing_embeddings
+from .config import INPUT_DIR, OUTPUT_DIR, MAX_WIDTH, MAX_HEIGHT, MIN_DET_SCORE, CHECK_EXISTING_EMBEDDINGS
 
 def print_existing_embeddings_summary():
     """Print summary of existing embeddings"""

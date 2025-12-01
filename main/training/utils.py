@@ -1,32 +1,45 @@
 import cv2
 import os
-from config import SHOW_PREVIEW
+import numpy as np
+from .config import SHOW_PREVIEW
+from send2trash import send2trash
+import sys
+import shutil
+import pathlib
 
 def show_preview(img, faces, window_name="Preview", duration=2000):
-    """Shows a preview with detected faces"""
     if not SHOW_PREVIEW:
         return
-    
+
     preview_img = img.copy()
-    
-    # Draw rectangles around detected faces
+
     for face in faces:
-        bbox = face.bbox.astype(int)
-        cv2.rectangle(preview_img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 2)
-        # Show confidence score
-        cv2.putText(preview_img, f"{face.det_score:.2f}", 
-                   (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-    
-    # Resize for better visualization if too large
+        # Obtener bbox y score de forma robusta
+        bbox = getattr(face, "bbox", None)
+        det = getattr(face, "det_score", None)
+        if bbox is None and isinstance(face, dict):
+            bbox = face.get("bbox")
+            det  = face.get("det_score")
+        if bbox is None:
+            continue
+
+        # Asegurar ints
+        x1, y1, x2, y2 = [int(v) for v in (bbox if isinstance(bbox, (list, tuple, np.ndarray)) else list(bbox))]
+        cv2.rectangle(preview_img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        if det is not None:
+            cv2.putText(preview_img, f"{float(det):.2f}", (x1, y1-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
     h, w = preview_img.shape[:2]
     if w > 800 or h > 600:
         scale = min(800/w, 600/h)
         new_w, new_h = int(w*scale), int(h*scale)
         preview_img = cv2.resize(preview_img, (new_w, new_h))
-    
+
     cv2.imshow(window_name, preview_img)
     cv2.waitKey(duration)
     cv2.destroyAllWindows()
+
 
 def resize_image_if_needed(img, max_width, max_height):
     """Resize image if it exceeds maximum dimensions"""
@@ -99,3 +112,51 @@ def print_final_tips(min_det_score):
     print("   - Use images with well-lit and frontal faces")
     print(f"   - Verify that MIN_DET_SCORE is not too high (current: {min_det_score})")
     print("   - Consider using higher quality images")
+
+
+def safe_delete_file(path, move_to_trash=False):
+    """Elimina el archivo. Si move_to_trash=False → borrado permanente."""
+    try:
+        if not os.path.exists(path):
+            return True
+        if move_to_trash:
+            try:
+                
+                send2trash(path)
+                print(f"🗑️  Enviado a Papelera: {path}")
+                return True
+            except Exception as e:
+                print(f"ℹ️  No se pudo usar Papelera ({e}), borrando permanente: {path}")
+        os.remove(path)
+        print(f"🧹 Borrado permanente: {path}")
+        return True
+    except Exception as e:
+        print(f"❌ Error al eliminar {path}: {e}")
+        return False
+
+def remove_dir_if_empty(dir_path):
+    """Elimina la carpeta si quedó vacía."""
+    try:
+        if os.path.isdir(dir_path) and len(os.listdir(dir_path)) == 0:
+            os.rmdir(dir_path)
+            print(f"🧹 Carpeta vacía eliminada: {dir_path}")
+            return True
+    except Exception as e:
+        print(f"⚠️ No se pudo eliminar carpeta vacía {dir_path}: {e}")
+    return False
+
+def compute_dynamic_augs_for_image(person_dir, current_person_total, originals_left):
+    """
+    Calcula cuántas augmentations generar para ESTA imagen, para acercarse
+    a TARGET_EMB_PER_PERSON, repartiendo el faltante entre las imágenes que quedan.
+    Respeta AUGS_PER_IMAGE_MIN/MAX.
+    """
+    from config import TARGET_EMB_PER_PERSON, AUGS_PER_IMAGE_MIN, AUGS_PER_IMAGE_MAX
+
+    remaining = max(0, TARGET_EMB_PER_PERSON - current_person_total)
+    if remaining == 0 or originals_left <= 0:
+        return 0
+
+    per_image_need = int(np.ceil(remaining / originals_left))
+    per_image_need = max(AUGS_PER_IMAGE_MIN, min(AUGS_PER_IMAGE_MAX, per_image_need))
+    return per_image_need

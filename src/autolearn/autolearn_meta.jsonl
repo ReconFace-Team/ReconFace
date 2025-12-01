@@ -1,0 +1,68 @@
+{"ts": 1764384169.3482606, "event": "queued", "person": "agustin", "conf_pct": 107.0803327471218, "bbox": [702, 497, 1028, 808]}
+{"ts": 1764384169.5260031, "event": "queued", "person": "agustin", "conf_pct": 105.29696118890293, "bbox": [709, 484, 1022, 780]}
+{"ts": 1764384169.7202852, "event": "queued", "person": "agustin", "conf_pct": 103.32245682759138, "bbox": [693, 494, 1018, 800]}
+{"ts": 1764384170.1495929, "event": "queued", "person": "agustin", "conf_pct": 106.29236064486719, "bbox": [684, 499, 1013, 812]}
+{"ts": 1764384170.3281376, "event": "queued", "person": "agustin", "conf_pct": 107.55277482968661, "bbox": [677, 504, 1009, 815]}
+{"ts": 1764384170.5712788, "event": "queued", "person": "agustin", "conf_pct": 108.12885354380886, "bbox": [685, 522, 1005, 814]}
+{"ts": 1764384170.7624574, "event": "queued", "person": "agustin", "conf_pct": 95.34803100096879, "bbox": [685, 522, 1013, 813]}
+{"ts": 1764384176.9675238, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384183.0592248, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384189.1983523, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384195.4827335, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384195.792928, "event": "queued", "person": "agustin", "conf_pct": 101.73437069663119, "bbox": [742, 466, 1037, 795]}
+{"ts": 1764384195.835966, "event": "queued", "person": "agustin", "conf_pct": 120.44771619266204, "bbox": [962, 371, 1277, 697]}
+{"ts": 1764384195.8810072, "event": "queued", "person": "agustin", "conf_pct": 107.7216835117638, "bbox": [1071, 389, 1331, 668]}
+{"ts": 1764384195.983208, "event": "queued", "person": "agustin", "conf_pct": 97.65586192641885, "bbox": [735, 463, 1034, 829]}
+{"ts": 1764384196.0332534, "event": "queued", "person": "agustin", "conf_pct": 137.86137341445243, "bbox": [979, 373, 1299, 727]}
+{"ts": 1764384196.078294, "event": "queued", "person": "agustin", "conf_pct": 118.68382413695603, "bbox": [1073, 364, 1357, 681]}
+{"ts": 1764384196.162298, "event": "queued", "person": "agustin", "conf_pct": 98.1998517831314, "bbox": [736, 458, 1040, 834]}
+{"ts": 1764384196.2123427, "event": "queued", "person": "agustin", "conf_pct": 126.61538229122779, "bbox": [975, 355, 1302, 688]}
+{"ts": 1764384196.2613914, "event": "queued", "person": "agustin", "conf_pct": 109.0043681052413, "bbox": [1056, 342, 1378, 681]}
+{"ts": 1764384196.3554728, "event": "queued", "person": "agustin", "conf_pct": 99.38740323873778, "bbox": [745, 450, 1040, 815]}
+{"ts": 1764384196.4045165, "event": "queued", "person": "agustin", "conf_pct": 135.60391039658734, "bbox": [977, 356, 1303, 694]}
+{"ts": 1764384196.4505656, "event": "queued", "person": "agustin", "conf_pct": 126.26295523665802, "bbox": [1059, 343, 1376, 675]}
+{"ts": 1764384196.5436573, "event": "queued", "person": "agustin", "conf_pct": 96.98215002586605, "bbox": [756, 455, 1038, 822]}
+{"ts": 1764384197.6304984, "event": "queued", "person": "agustin", "conf_pct": 134.0130670863223, "bbox": [1052, 344, 1383, 684]}
+{"ts": 1764384197.7194076, "event": "queued", "person": "agustin", "conf_pct": 101.13194709044195, "bbox": [760, 455, 1034, 818]}
+{"ts": 1764384198.796619, "event": "queued", "person": "agustin", "conf_pct": 111.20152312887397, "bbox": [1067, 342, 1371, 673]}
+{"ts": 1764384198.879294, "event": "queued", "person": "agustin", "conf_pct": 112.01509359604859, "bbox": [765, 451, 1039, 818]}
+{"ts": 1764384199.1118686, "event": "queued", "person": "agustin", "conf_pct": 96.88802022172902, "bbox": [721, 383, 988, 684]}
+{"ts": 1764384205.3228269, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384211.491886, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384217.7420344, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384218.4237993, "event": "queued", "person": "agustin", "conf_pct": 97.49306071836052, "bbox": [733, 517, 1077, 825]}
+{"ts": 1764384219.322529, "event": "queued", "person": "benjamin valdivia", "conf_pct": 102.25303053855895, "bbox": [663, 595, 867, 876]}
+{"ts": 1764384225.8099382, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384232.005293, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384238.2720685, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384244.6699815, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384245.1143818, "event": "queued", "person": "benjamin celular", "conf_pct": 118.91230425921583, "bbox": [713, 489, 996, 868]}
+{"ts": 1764384245.1624234, "event": "queued", "person": "benjamin celular", "conf_pct": 142.3031024446014, "bbox": [946, 381, 1223, 796]}
+{"ts": 1764384245.2164721, "event": "queued", "person": "agustin", "conf_pct": 130.45436160012318, "bbox": [1004, 359, 1311, 735]}
+{"ts": 1764384245.2715216, "event": "queued", "person": "benjamin celular", "conf_pct": 108.61422156771057, "bbox": [709, 487, 992, 860]}
+{"ts": 1764384245.3190749, "event": "queued", "person": "benjamin valdivia", "conf_pct": 133.031828288077, "bbox": [940, 386, 1218, 787]}
+{"ts": 1764384245.36712, "event": "queued", "person": "benjamin celular", "conf_pct": 126.32441104928617, "bbox": [1000, 357, 1301, 721]}
+{"ts": 1764384245.428174, "event": "queued", "person": "benjamin celular", "conf_pct": 111.73045638384752, "bbox": [710, 487, 988, 859]}
+{"ts": 1764384245.516285, "event": "queued", "person": "benjamin celular", "conf_pct": 141.32322571859612, "bbox": [959, 385, 1217, 791]}
+{"ts": 1764384245.5614996, "event": "queued", "person": "benjamin celular", "conf_pct": 130.64231786143174, "bbox": [1012, 356, 1308, 739]}
+{"ts": 1764384245.6448052, "event": "queued", "person": "benjamin celular", "conf_pct": 124.25178074267696, "bbox": [699, 482, 984, 862]}
+{"ts": 1764384245.7092772, "event": "queued", "person": "benjamin celular", "conf_pct": 140.75709971699615, "bbox": [947, 388, 1215, 787]}
+{"ts": 1764384245.759321, "event": "queued", "person": "agustin", "conf_pct": 136.13422839473037, "bbox": [1005, 354, 1303, 731]}
+{"ts": 1764384245.8317482, "event": "queued", "person": "benjamin celular", "conf_pct": 117.4523830859819, "bbox": [703, 479, 977, 854]}
+{"ts": 1764384245.9172375, "event": "queued", "person": "benjamin celular", "conf_pct": 132.07048082287363, "bbox": [950, 389, 1215, 792]}
+{"ts": 1764384245.968288, "event": "queued", "person": "agustin", "conf_pct": 129.5851986555315, "bbox": [1004, 352, 1301, 738]}
+{"ts": 1764384246.0273385, "event": "queued", "person": "agustin", "conf_pct": 115.84673176498426, "bbox": [694, 480, 983, 865]}
+{"ts": 1764384246.1095757, "event": "queued", "person": "benjamin celular", "conf_pct": 118.06935809971397, "bbox": [946, 389, 1214, 787]}
+{"ts": 1764384246.1546142, "event": "queued", "person": "agustin", "conf_pct": 132.18393687115815, "bbox": [992, 356, 1299, 726]}
+{"ts": 1764384246.2236814, "event": "queued", "person": "agustin", "conf_pct": 110.73644337458299, "bbox": [714, 489, 974, 841]}
+{"ts": 1764384246.3167534, "event": "queued", "person": "benjamin celular", "conf_pct": 130.60317991974355, "bbox": [951, 381, 1209, 781]}
+{"ts": 1764384246.3617942, "event": "queued", "person": "agustin", "conf_pct": 124.36223213764313, "bbox": [1003, 355, 1297, 739]}
+{"ts": 1764384246.4577572, "event": "queued", "person": "benjamin celular", "conf_pct": 128.4331472094548, "bbox": [711, 483, 974, 848]}
+{"ts": 1764384246.5098057, "event": "queued", "person": "benjamin celular", "conf_pct": 125.45546689972157, "bbox": [953, 383, 1208, 792]}
+{"ts": 1764384246.5558467, "event": "queued", "person": "agustin", "conf_pct": 127.25579408210646, "bbox": [1008, 358, 1300, 736]}
+{"ts": 1764384246.6457636, "event": "queued", "person": "agustin", "conf_pct": 106.0579286029311, "bbox": [706, 483, 976, 854]}
+{"ts": 1764384246.713802, "event": "queued", "person": "benjamin celular", "conf_pct": 114.64951319558416, "bbox": [953, 385, 1209, 793]}
+{"ts": 1764384246.7598445, "event": "queued", "person": "benjamin celular", "conf_pct": 136.3998264417615, "bbox": [1005, 352, 1298, 749]}
+{"ts": 1764384252.8528535, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384259.0507102, "event": "promoted", "person": "agustin", "batch_embs": 100}
+{"ts": 1764384265.4136298, "event": "promoted", "person": "agustin", "batch_embs": 100}

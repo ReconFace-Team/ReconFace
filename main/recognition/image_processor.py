@@ -6,32 +6,30 @@ import cv2
 import numpy as np
 import logging
 
-from config import *
+from .config import *
 
 logger = logging.getLogger(__name__)
 
 
 def preprocess_frame(frame):
     """Preprocesamiento optimizado para larga distancia"""
-    # Convertir de BGR a RGB
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    # Ajusta orden de color según config
+    if EXPECTED_COLOR_ORDER.upper() == "RGB":
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    # Si BGR, no convertimos
 
-    # Mejorar contraste y nitidez
+    # Mejora de contraste/nitidez idéntica a la tuya
     frame = cv2.convertScaleAbs(frame, alpha=CONTRAST_ALPHA, beta=BRIGHTNESS_BETA)
-
-    # Reducir ruido manteniendo detalles
-    frame = cv2.bilateralFilter(frame, BILATERAL_FILTER_D, 
-                               BILATERAL_FILTER_SIGMA_COLOR, 
-                               BILATERAL_FILTER_SIGMA_SPACE)
-
-    # Sharpening (opcional según configuración)
+    frame = cv2.bilateralFilter(frame, BILATERAL_FILTER_D,
+                                BILATERAL_FILTER_SIGMA_COLOR,
+                                BILATERAL_FILTER_SIGMA_SPACE)
     if ENHANCED_PREPROCESSING:
         kernel = np.array([[-1, -1, -1],
                            [-1,  9, -1],
                            [-1, -1, -1]])
         frame = cv2.filter2D(frame, -1, kernel)
-
     return frame
+
 
 
 def enhance_face_region(frame, bbox):
