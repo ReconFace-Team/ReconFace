@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
         self.training_tab = TrainingTab()
 
         tabs.addTab(self.recognition_tab, "Reconocimiento")
-        tabs.addTab(self.lists_tab, "Listas (White/Black)")
+        # tabs.addTab(self.lists_tab, "Listas (White/Black)")
         tabs.addTab(self.training_tab, "Entrenamiento")
 
         self.setCentralWidget(tabs)
