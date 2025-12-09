@@ -1,177 +1,91 @@
-# Sistema de Reconocimiento Facial Optimizado
+# ReconFace
 
-Sistema de reconocimiento facial en tiempo real optimizado para detección a larga distancia con múltiples mejoras de rendimiento y precisión.
+**ReconFace** es un sistema integral de reconocimiento facial en tiempo real. Esta versión evolucionada del proyecto introduce una arquitectura modular y una interfaz gráfica de usuario (GUI) dedicada para facilitar la gestión de identidades, el monitoreo en vivo y la administración del sistema.
 
-## Características Principales
+## 📋 Descripción
 
-- **Reconocimiento a larga distancia**: Optimizado para detectar caras pequeñas y lejanas
-- **Procesamiento en tiempo real**: Optimizaciones de rendimiento para video en vivo
-- **Threshold adaptativo**: Ajuste automático de umbrales según el tamaño de la cara
-- **Suavizado temporal**: Reduce flickering en las identificaciones
-- **Super-resolución**: Mejora automática de caras pequeñas
-- **Índice FAISS**: Búsqueda rápida en grandes conjuntos de embeddings
-- **Métricas de rendimiento**: Monitoreo en tiempo real del sistema
+El proyecto ha sido reestructurado para separar la lógica de procesamiento visual de la interfaz de usuario, ofreciendo una solución más robusta y mantenible. Utiliza una base de datos ligera basada en JSON para la persistencia de datos, eliminando la necesidad de configuraciones de bases de datos complejas para despliegues locales.
 
-## Estructura del Proyecto
+## ✨ Características Principales
 
-```
-face_recognition_system/
-├── main.py                 # Aplicación principal
-├── config.py               # Configuración del sistema
-├── face_recognizer.py      # Clase principal de reconocimiento
-├── face_processor.py       # Lógica de procesamiento de caras
-├── image_processor.py      # Funciones de procesamiento de imagen
-├── camera_manager.py       # Gestión de cámara
-├── utils.py               # Funciones utilitarias
-├── requirements.txt       # Dependencias
-├── README.md             # Documentación
-└── embeddings/           # Directorio de embeddings (crear manualmente)
-    ├── persona1/
-    │   ├── emb1.npy
-    │   └── emb2.npy
-    └── persona2/
-        ├── emb1.npy
-        └── emb2.npy
-```
+* **Interfaz Gráfica (GUI)**: Punto de entrada unificado a través de `run_gui.py`, permitiendo una interacción visual amigable en lugar de comandos de consola.
+* **Gestión de Datos Simplificada**: Almacenamiento de embeddings faciales y metadatos de usuarios en `database.json`.
+* **Sistema de Auditoría**: Generación automática de registros de actividad y errores en el directorio `logs/`.
+* **Arquitectura Modular**:
+  * **`src/`**: Núcleo del procesamiento y algoritmos de reconocimiento.
+  * **`gui/`**: Componentes visuales y ventanas.
+  * **`main/`**: Scripts de ejecución lógica.
+* **Soporte de Pruebas**: Incluye un directorio `test/` para validación de funcionalidades.
 
-## Instalación
+## 📂 Estructura del Proyecto
 
-1. **Clonar o descargar los archivos del proyecto**
+La organización actual del repositorio es la siguiente:
 
-2. **Instalar dependencias**:
+```text
+ReconFace/
+├── run_gui.py              # Script principal de ejecución (Entry Point)
+├── database.json           # Base de datos de identidades
+├── requirements.txt        # Dependencias del proyecto
+├── src/                    # Código fuente del motor de reconocimiento
+├── gui/                    # Código fuente de la interfaz gráfica
+├── main/                   # Módulos principales de lógica
+├── logs/                   # Archivos de log (creado en runtime)
+├── test/                   # Scripts de pruebas unitarias
+└── THIRD_PARTY_NOTICES.txt # Licencias de terceros
+````
+
+## 🛠️ Instalación
+
+### Requisitos Previos
+
+  * Python 3.10
+  * CUDA 12.2, cuDNN 9.0.X y TensorRT 10.X
+  * Webcam o cámara IP disponible
+  * Git instalado
+
+### Pasos de Instalación
+
+1.  **Clonar el repositorio:**
+
+    ```bash
+    git clone [https://github.com/ReconFace-Team/ReconFace.git](https://github.com/ReconFace-Team/ReconFace.git)
+    cd ReconFace
+    ```
+
+2.  **Crear y activar un entorno virtual (Opcional pero recomendado):**
+
+    ```bash
+    python -m venv venv
+    
+    # En Windows:
+    venv\Scripts\activate
+    
+    # En Linux/Mac:
+    source venv/bin/activate
+    ```
+
+3.  **Instalar dependencias:**
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## 🚀 Uso
+
+Para iniciar la aplicación con la interfaz gráfica, ejecute el siguiente comando desde la raíz del proyecto:
+
 ```bash
-pip install -r requirements.txt
+python run_gui.py
 ```
 
-3. **Crear directorio de embeddings**:
-```bash
-mkdir embeddings
-```
+### Funcionalidades Esperadas en la GUI:
 
-4. **Organizar embeddings por persona**:
-   - Crear una carpeta por persona en `embeddings/`
-   - Colocar archivos `.npy` de embeddings dentro de cada carpeta
-   - El nombre de la carpeta será usado como identificador de la persona
+  * **Registro**: Captura y almacenamiento de nuevos rostros según entrenamiento.
+  * **Monitoreo**: Visualización en tiempo real con bounding boxes e identificación.
+  * **Logs**: Revisión de eventos pasados (dependiendo de la implementación de la GUI).
 
-## Configuración
+## 📄 Licencia y Avisos
 
-Editar `config.py` para ajustar parámetros:
+Revise el archivo `THIRD_PARTY_NOTICES.txt` para información sobre las licencias de las librerías y componentes de terceros utilizados en este proyecto.
 
-### Configuración de Cámara
-```python
-USE_RTSP = 0  # 0 para cámara local, 1 para RTSP
-RTSP_URL = "rtsp://usuario:contraseña@ip:puerto/stream"
-CAMERA_WIDTH = 1280
-CAMERA_HEIGHT = 720
-```
-
-### Parámetros de Reconocimiento
-```python
-THRESHOLD = 0.50  # Umbral de similitud (0.0-1.0)
-MIN_CONFIDENCE = 0.85  # Confianza mínima de detección
-MIN_FACE_SIZE = 30  # Tamaño mínimo de cara en píxeles
-```
-
-### Optimizaciones para Larga Distancia
-```python
-ENABLE_SUPER_RESOLUTION = True  # Mejorar caras pequeñas
-DISTANCE_ADAPTIVE_THRESHOLD = True  # Umbral dinámico
-ENHANCED_PREPROCESSING = True  # Preprocesamiento avanzado
-```
-
-## Uso
-
-### Ejecutar el Sistema
-```bash
-python main.py
-```
-
-### Controles Durante Ejecución
-- **'q'**: Salir del sistema
-- **'s'**: Mostrar estadísticas detalladas
-- **'r'**: Resetear estadísticas
-
-### Interpretación de Colores
-- **Verde**: Alta confianza, cara cerca
-- **Amarillo**: Confianza media
-- **Naranja**: Baja confianza o cara lejos
-- **Rojo**: Persona desconocida
-
-## Optimizaciones Implementadas
-
-### 1. Procesamiento de Imagen
-- Mejora de contraste y brillo
-- Filtro bilateral para reducir ruido
-- Sharpening para mejorar detalles
-- Super-resolución para caras pequeñas
-
-### 2. Algoritmo de Reconocimiento
-- Índice FAISS para búsqueda rápida
-- Threshold adaptativo por tamaño de cara
-- Suavizado temporal para estabilidad
-- Validación de calidad de embeddings
-
-### 3. Rendimiento
-- Procesamiento selectivo de frames
-- Búsqueda optimizada con top-k candidatos
-- Estadísticas robustas para mejor matching
-- Gestión eficiente de memoria
-
-## Parámetros Técnicos
-
-### Umbrales de Distancia
-- **Cerca**: > 80px (threshold normal)
-- **Medio**: 50-80px (threshold +0.05)
-- **Lejos**: 30-50px (threshold +0.10)
-- **Muy lejos**: < 30px (threshold +0.15)
-
-### Métricas de Calidad
-- Embedding válido: 512 dimensiones, norma > 0.1
-- Consistencia temporal: mínimo 3 detecciones
-- Penalización por distancia: hasta 20% menos confianza
-
-## Solución de Problemas
-
-### Error: "Directorio embeddings no existe"
-Crear el directorio manualmente:
-```bash
-mkdir embeddings
-```
-
-### Error: "No se encontraron embeddings válidos"
-- Verificar que existen archivos `.npy` en subdirectorios de `embeddings/`
-- Verificar que los embeddings tienen 512 dimensiones
-- Verificar que los archivos no están corruptos
-
-### Baja tasa de reconocimiento
-- Ajustar `THRESHOLD` (valores más altos = más estricto)
-- Aumentar `MIN_CONFIDENCE` para mejor calidad de detección
-- Verificar iluminación y calidad de video
-- Añadir más embeddings de entrenamiento
-
-### Rendimiento lento
-- Aumentar `PROCESS_EVERY_N_FRAMES` (procesar menos frames)
-- Reducir resolución de cámara
-- Desactivar `ENABLE_SUPER_RESOLUTION`
-- Usar GPU con `CTX_ID = 0` en lugar de CPU
-
-## Archivos de Configuración
-
-### config.py
-Contiene todas las configuraciones del sistema, organizadas por categorías.
-
-### requirements.txt
-Lista todas las dependencias necesarias con versiones específicas.
-
-## Arquitectura del Sistema
-
-El sistema está diseñado con una arquitectura modular:
-
-1. **main.py**: Orquesta todos los componentes
-2. **OptimizedFaceRecognizer**: Maneja embeddings e identificación
-3. **FaceProcessor**: Procesa frames y aplica lógica de reconocimiento
-4. **CameraManager**: Gestiona la fuente de video
-5. **ImageProcessor**: Funciones de mejora de imagen
-6. **Utils**: Herramientas de monitoreo y logging
-
-Esta separación permite fácil mantenimiento, testing y extensión del sistema.
+Copyright © 2024-2025 ReconFace Team
