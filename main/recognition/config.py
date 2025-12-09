@@ -22,7 +22,7 @@ MODELS_DIR   = PROJECT_ROOT / "models"
 EMBEDDING_DIR = str(PROJECT_ROOT / "src" / "embeddings")
 
 THRESHOLD = 0.50           # Umbral base para decisión de match (similaridad/distancia)
-MIN_CONFIDENCE = 0.85      # Confianza mínima para mostrar como reconocido
+MIN_CONFIDENCE = 0.90      # Confianza mínima para mostrar como reconocido
 TEMPORAL_WINDOW = 7        # Ventana temporal para suavizado (si se usa)
 MIN_FACE_SIZE = 30         # Tamaño mínimo de cara (px)
 QUALITY_THRESHOLD = 0.7    # Calidad mínima de embedding

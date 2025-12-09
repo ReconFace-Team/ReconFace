@@ -9,6 +9,7 @@ from collections import deque
 
 from .config import *
 from .image_processor import *
+from .recognition_logger import RecognitionLogger
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ class FaceProcessor:
     
     def __init__(self, recognizer):
         self.recognizer = recognizer
+        self.event_logger = RecognitionLogger()
     
     def process_frame(self, frame):
         """Procesamiento principal del frame con OpenVINO + optimizaciones larga distancia"""
@@ -45,6 +47,19 @@ class FaceProcessor:
 
                 # Penalización por distancia
                 confidence = apply_confidence_penalty(confidence, face_size)
+
+                try:
+                    cam_label = f"CLI_CAM_{CAMERA_INDEX}"  # o el nombre que quieras
+                    self.event_logger.log_event(
+                        camara=cam_label,
+                        identity=identity,
+                        confidence=confidence,
+                        det_score=f.det_score,
+                        face_size=face_size,
+                        motivo=None,  # dejamos que el logger ponga uno por defecto
+                    )
+                except Exception as e:
+                    logger.error(f"Error logeando evento de reconocimiento: {e}")
 
                 results.append({
                     'bbox': (x1, y1, x2, y2),

@@ -330,6 +330,7 @@ class OptimizedFaceRecognizer:
 
         return best_match
 
+
     def apply_temporal_smoothing(self, face_id, identity, confidence):
         self.temporal_buffer[face_id].append((identity, confidence))
         if len(self.temporal_buffer[face_id]) < 3:
