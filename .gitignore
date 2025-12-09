@@ -1,0 +1,21 @@
+# === ENTORNOS VIRTUALES ===
+.venv/
+venv/
+env/
+
+# === CACHE DE PYTHON ===
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# === MODELOS ===
+models/
+
+# === CONFIGURACIONES LOCALES ===
+*.env
+*.env.*
+.envrc
+
+# === CACHE DE LIBRERÍAS ===
+.cache/

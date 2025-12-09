@@ -101,8 +101,7 @@ def main():
     """Main debug function"""
     debug_folder_structure()
     
-    # You can manually check specific images here
-    # Example: check_specific_image("john_doe", "photo1.jpg")
+
     
     print("\n💡 TIPS:")
     print("   - Check if person names match between input and output folders")
