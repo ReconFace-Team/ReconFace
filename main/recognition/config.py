@@ -22,7 +22,7 @@ MODELS_DIR   = PROJECT_ROOT / "models"
 EMBEDDING_DIR = str(PROJECT_ROOT / "src" / "embeddings")
 
 THRESHOLD = 0.50           # Umbral base para decisión de match (similaridad/distancia)
-MIN_CONFIDENCE = 0.90      # Confianza mínima para mostrar como reconocido
+MIN_CONFIDENCE = 0.80      # Confianza mínima para mostrar como reconocido
 TEMPORAL_WINDOW = 7        # Ventana temporal para suavizado (si se usa)
 MIN_FACE_SIZE = 30         # Tamaño mínimo de cara (px)
 QUALITY_THRESHOLD = 0.7    # Calidad mínima de embedding
@@ -31,7 +31,7 @@ QUALITY_THRESHOLD = 0.7    # Calidad mínima de embedding
 #                           PERFORMANCE OPTIMIZATION
 # =====================================================================================
 
-PROCESS_EVERY_N_FRAMES = 1  # Procesar cada frame
+PROCESS_EVERY_N_FRAMES = 2  # Procesar cada frame
 FRAME_RESIZE_FACTOR = 1   # 1.0 = sin redimensionar
 BATCH_SIZE = 4              # Caras por lote
 
