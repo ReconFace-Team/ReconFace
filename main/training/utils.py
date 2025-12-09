@@ -1,11 +1,15 @@
 import cv2
 import os
 import numpy as np
-from .config import SHOW_PREVIEW
 from send2trash import send2trash
 import sys
 import shutil
 import pathlib
+
+try:
+    from .config import SHOW_PREVIEW
+except ImportError:
+    from config import SHOW_PREVIEW
 
 def show_preview(img, faces, window_name="Preview", duration=2000):
     if not SHOW_PREVIEW:
